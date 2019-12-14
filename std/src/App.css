@@ -110,3 +110,8 @@ h4{
 
   font-size:.5em
 }
+
+svg {
+  display: inline-block;
+  vertical-align: middle;
+}
