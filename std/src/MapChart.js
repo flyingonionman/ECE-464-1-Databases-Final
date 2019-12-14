@@ -4,7 +4,7 @@ import { scaleQuantize } from "d3-scale";
 import { csv } from "d3-fetch";
 
 //Data available at NYC open data
-const geoUrl = "https://raw.githubusercontent.com/debterr/mappage/master/CanUSMex-LowRes.json";
+const geoUrl = "https://raw.githubusercontent.com/flyingonionman/ECE-464-1-Databases-Final/master/map.json";
 
 const colorScale = scaleQuantize()
   .domain([1, 10])
@@ -22,13 +22,6 @@ const colorScale = scaleQuantize()
 
 const MapChart = () => {
   const [data, setData] = useState([]);
-
- /*  useEffect(() => {
-    // https://www.bls.gov/lau/
-    csv("/unemp.csv").then(counties => {
-      setData(counties);
-    });
-  }, []); */
 
   return (
     <div>
