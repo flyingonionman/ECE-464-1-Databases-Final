@@ -15,7 +15,7 @@ app.use(cors(corsOptions))
 app.route('/condom')
   .get(function(req, res, next) {
     con.query(
-      "SELECT * FROM condom",
+      "SELECT * FROM condom c WHERE c.FacilityPK = \"52681898\"",
       function(error, results, fields) {
         if (error) throw error;
         res.json(results);
