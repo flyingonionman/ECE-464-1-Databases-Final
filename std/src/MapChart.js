@@ -4,7 +4,7 @@ import { scaleQuantize } from "d3-scale";
 import { csv } from "d3-fetch";
 
 //Data available at NYC open data
-const geoUrl = "/NTAmap.json";
+const geoUrl = "https://raw.githubusercontent.com/flyingonionman/ECE-464-1-Databases-Final/master/NTAmap.json";
 
 const colorScale = scaleQuantize()
   .domain([1, 10])
@@ -23,32 +23,23 @@ const colorScale = scaleQuantize()
 const MapChart = () => {
   const [data, setData] = useState([]);
 
-  useEffect(() => {
+ /*  useEffect(() => {
     // https://www.bls.gov/lau/
     csv("/unemp.csv").then(counties => {
       setData(counties);
     });
-  }, []);
+  }, []); */
 
   return (
-    <>
-      <ComposableMap projection="geoAlbersUsa">
+    <div>
+      <ComposableMap>
         <Geographies geography={geoUrl}>
-          {({ geographies }) =>
-            geographies.map(geo => {
-              const cur = data.find(s => s.id === geo.id);
-              return (
-                <Geography
-                  key={geo.rsmKey}
-                  geography={geo}
-                  fill={colorScale(cur ? cur.unemployment_rate : "#EEE")}
-                />
-              );
-            })
-          }
+          {({geographies}) => geographies.map(geo =>
+            <Geography key={geo.rsmKey} geography={geo} />
+          )}
         </Geographies>
       </ComposableMap>
-    </>
+    </div>
   );
 };
 
