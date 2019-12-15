@@ -1,39 +1,35 @@
-import React, { useState, useEffect } from "react";
-import { ComposableMap, Geographies, Geography } from "react-simple-maps";
-import { scaleQuantize } from "d3-scale";
-import { csv } from "d3-fetch";
+import React, { Component } from 'react';
+import GoogleMapReact from 'google-map-react';
 
-//Data available at NYC open data
-const geoUrl = "https://raw.githubusercontent.com/flyingonionman/ECE-464-1-Databases-Final/master/map.json";
+const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
-const colorScale = scaleQuantize()
-  .domain([1, 10])
-  .range([
-    "#ffedea",
-    "#ffcec5",
-    "#ffad9f",
-    "#ff8a75",
-    "#ff5533",
-    "#e2492d",
-    "#be3d26",
-    "#9a311f",
-    "#782618"
-  ]);
+class MapChart extends Component {
+  static defaultProps = {
+    center: {
+      lat: 40.7128 ,
+      lng: -74.0060
+    },
+    zoom: 11
+  };
 
-const MapChart = () => {
-  const [data, setData] = useState([]);
-
-  return (
-    <div>
-      <ComposableMap>
-        <Geographies geography={geoUrl}>
-          {({geographies}) => geographies.map(geo =>
-            <Geography key={geo.rsmKey} geography={geo} />
-          )}
-        </Geographies>
-      </ComposableMap>
-    </div>
-  );
-};
+  render() {
+    return (
+      // Important! Always set the container height explicitly
+      <div style={{ height: '80vh', width: '100%'  }}>
+        <GoogleMapReact
+          bootstrapURLKeys={{ key:"AIzaSyD-J8k2QBUslpsCZu0dhY_p5qGXDk8XHDA" }}
+          defaultCenter={this.props.center}
+          defaultZoom={this.props.zoom}
+        >
+          <AnyReactComponent
+            lat={40.7831}
+            lng={73.9712}
+            text="My Marker"
+          />
+        </GoogleMapReact>
+      </div>
+    );
+  }
+}
 
 export default MapChart;

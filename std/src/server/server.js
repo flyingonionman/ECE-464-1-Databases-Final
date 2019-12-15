@@ -15,7 +15,7 @@ app.use(cors(corsOptions))
 app.route('/condom')
   .get(function(req, res, next) {
     con.query(
-      "SELECT * FROM condom c WHERE c.FacilityPK = \"52681898\"",
+      "SELECT * FROM condom as c",
       function(error, results, fields) {
         if (error) throw error;
         res.json(results);
@@ -33,6 +33,18 @@ app.route('/HIV')
     }
   );
 });  
+
+app.route('/neigh')
+.get(function(req, res, next) {
+  con.query(
+    "SELECT * FROM ZipstoNeigh",
+    function(error, results, fields) {
+      if (error) throw error;
+      res.json(results);
+    }
+  );
+});  
+
 
 app.get('/status', (req, res) => res.send('Working!'));
 

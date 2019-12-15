@@ -10,6 +10,8 @@
     "concurrently": "^5.0.1",
     "cors": "^2.8.5",
     "d3-fetch": "^1.1.2",
+    "d3-geo": "^1.11.9",
+    "d3-geomap": "^3.3.0",
     "d3-scale": "^3.2.1",
     "google-map-react": "^1.1.5",
     "mysql": "^2.17.1",
@@ -18,7 +20,10 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.3.0",
     "react-simple-maps": "^1.0.0-beta.0",
-    "sequelize": "^5.21.3"
+    "sequelize": "^5.21.3",
+    "topojson": "^3.0.2",
+    "topojson-client": "^3.1.0",
+    "topojson-server": "^3.0.1"
   },
   "scripts": {
     "start": "concurrently \"react-scripts start\" \"node ./src/server/server.js  \"",
