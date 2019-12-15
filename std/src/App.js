@@ -11,16 +11,20 @@ import {
 import MapChart from "./MapChart";
 
 class App extends React.Component {
-  state = { 
-      statesData: null ,
-      condom:[],
-      isLoading: true,
-      value:"East Harlem"
-  }
-
   constructor(props) {
       super(props)
       this.loadData()
+
+      this.state = { 
+        statesData: null ,
+        condom:[],
+        zipcode:[],
+        isLoading: true,
+        value:"East Harlem"
+      }
+
+      this.handleChange = this.handleChange.bind(this);
+      this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   async loadData() {
@@ -34,7 +38,6 @@ class App extends React.Component {
       .then(res => {
         const condom = res.data;
         this.setState({ condom });
-        this.setState({isLoading : false });
       })
   }
 
@@ -44,7 +47,17 @@ class App extends React.Component {
 
   handleSubmit(event) {
      event.preventDefault();
-     
+     axios.get('http://localhost:5000/neigh/', {
+      params: {
+        id: this.state.value
+      }
+    })
+      .then(res => {
+        const zipcode = res.data;
+        console.log(res);
+        this.setState({ zipcode });
+        this.setState({isLoading : false });
+      })
   }
 
 
@@ -72,7 +85,7 @@ class App extends React.Component {
                 <form onSubmit={this.handleSubmit}>
                   <label>
                     Place:
-                    <select  value={this.state.value} onChange={this.handleChange}>
+                    <select value={this.state.value} onChange={this.handleChange}>
                       <option value='Bayside and Little Neck'>Bayside and Little Neck</option>
                       <option value='Bedford Stuyvesant and Crown Heights'>Bedford Stuyvesant and Crown Heights</option>
                       <option value='Bensonhurst and Bay Ridge'>Bensonhurst and Bay Ridge</option>
@@ -126,17 +139,15 @@ class App extends React.Component {
                 </form>
 
                 {!isLoading ? (
-                  condom.map(condom => {
-                    const { FacilityPK, FacilityName, ServiceCategory,ServiceType,PartnerTypeDetailed,Address,Zipcode } = condom;
+                  condom.map(zipcode => {
+                    const {  FacilityName, latitude,longitude,Neighborhood,Zipcode } = zipcode;
                     return (
-                      <div key={FacilityPK}>
+                      <div key={FacilityName}>
                         <p>Facility Name: {FacilityName}</p>
-                        <p>Service Category: {ServiceCategory}</p>
-                        <p>Service Type: {ServiceType}</p>
-                        <p>Detailed Partner Type: {PartnerTypeDetailed}</p>
-                        <p>Address: {Address}</p>
+                        <p>Service Category: {latitude}</p>
+                        <p>Service Type: {longitude}</p>
+                        <p>Detailed Partner Type: {Neighborhood}</p>
                         <p>Zipcode: {Zipcode}</p>
-
                         <hr />
                       </div>
                     );

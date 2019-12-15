@@ -14,6 +14,7 @@ app.use(cors(corsOptions))
 
 app.route('/condom')
   .get(function(req, res, next) {
+
     con.query(
       "SELECT * FROM condom as c",
       function(error, results, fields) {
@@ -34,15 +35,21 @@ app.route('/HIV')
   );
 });  
 
-app.route('/neigh')
+app.route('/neigh/:id')
+
 .get(function(req, res, next) {
+  console.log(req.params.id);
+
   con.query(
-    "SELECT * FROM ZipstoNeigh",
+    "SELECT c.FacilityName, c.latitude, c.longitude, z.Neighborhood, z.Zipcode FROM condom as c ,ZipstoNeigh as z WHERE z.Zipcode = c.Zipcode AND z.Neighborhood = ?",
+    [req.params.id],
     function(error, results, fields) {
       if (error) throw error;
       res.json(results);
     }
   );
+  console.log(req.params.id);
+
 });  
 
 
