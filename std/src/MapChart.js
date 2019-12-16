@@ -122,11 +122,7 @@ class MapChart extends Component {
           onClick={this.onMapClick.bind(this)}
 
         >
-          <AnyReactComponent
-            lat={40.7128}
-            lng={-74.0060}
-            text=""
-          />
+          
         </GoogleMapReact>
         <button style={togglestyle} onClick={this.toggleHeatMap.bind(this)}>Toggle heatmap</button>
 

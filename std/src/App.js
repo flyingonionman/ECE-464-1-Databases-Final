@@ -18,10 +18,13 @@ class App extends React.Component {
       this.state = { 
         statesData: null ,
         condom:[],
+        condom2:[],
         zipcode:[],
         facility:[],
         ratio:[],
         count:[],
+
+        detailvis:false,
         isLoading: true,
         ismapLoading:true,
         value:"East Harlem",
@@ -31,6 +34,7 @@ class App extends React.Component {
       this.handleChange = this.handleChange.bind(this);
       this.handleSubmit = this.handleSubmit.bind(this);
       this.handleyearChange = this.handleyearChange.bind(this);
+      this.seedetail = this.seedetail.bind(this);
 
   }
 
@@ -44,7 +48,11 @@ class App extends React.Component {
     axios.get(`http://localhost:5000/condom`)
       .then(res => {
         const condom = res.data;
+        const condom2 = res.data;
+
         this.setState({ condom });
+        this.setState({ condom2 });
+
         this.setState({ismapLoading : false });
 
       })
@@ -94,7 +102,10 @@ class App extends React.Component {
       this.setState({isLoading : false });
   }
 
-
+  seedetail(){
+    const detailvis = !this.state.detailvis;
+    this.setState({detailvis});
+  }
   render() {
       if (this.state.statesData === null) {
           return <div>Loading...</div>
@@ -135,7 +146,6 @@ class App extends React.Component {
                           </div>
                         );
                       })
-                    // If there is a delay in data, let's let the user know it's loading
                     ) : (
                       <h3></h3>
                     )}
@@ -153,7 +163,6 @@ class App extends React.Component {
                           </div>
                         );
                       })
-                      // If there is a delay in data, let's let the user know it's loading
                       ) : (
                       <h3></h3>
                       )}
@@ -225,6 +234,8 @@ class App extends React.Component {
                     <>
                     <h3>Neighborhood Data</h3>
                     <h4>Total number of HIV patients in year {this.state.year} :  {JSON.stringify(facility.HIVAIDS_Diagnoses)}</h4>
+                    <button className ="custom-select-button" onClick={() => { this.seedetail() }}>See detail</button>
+
                     </>
                      : null }
 
@@ -238,6 +249,15 @@ class App extends React.Component {
                           <p>Facility Name: {FacilityName}</p>
                           <p>Neighborhood: {Neighborhood}</p>
                           <p>Zipcode: {Zipcode}</p>
+                            {this.state.detailvis ? 
+                              <div>
+                              <p>
+                                Address: { this.state.condom2.find(element => element.FacilityName == FacilityName).Address    }                              </p>
+                              <p>
+                                Partner Type: { this.state.condom2.find(element => element.FacilityName == FacilityName).PartnerType    }
+                              </p>
+                              </div>
+                            : null }
                           <hr />
                         </div>
                       </div>
