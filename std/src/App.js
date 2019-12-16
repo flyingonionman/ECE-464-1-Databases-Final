@@ -47,10 +47,7 @@ class App extends React.Component {
 
   handleSubmit(event) {
      event.preventDefault();
-     axios.get('http://localhost:5000/neigh/', {
-      params: {
-        id: this.state.value
-      }
+     axios.get('http://localhost:5000/neigh/' + this.state.value, {
     })
       .then(res => {
         const zipcode = res.data;
@@ -66,7 +63,7 @@ class App extends React.Component {
           return <div>Loading...</div>
       }
 
-      const {isLoading ,condom} = this.state;
+      const {isLoading ,condom,zipcode} = this.state;
 
       return (
         <Router>
@@ -80,7 +77,7 @@ class App extends React.Component {
                 <h3>
                   Search for things !
                 </h3>
-                <MapChart/>
+                <MapChart coords={zipcode}/>
                 
                 <form onSubmit={this.handleSubmit}>
                   <label>
@@ -139,7 +136,7 @@ class App extends React.Component {
                 </form>
 
                 {!isLoading ? (
-                  condom.map(zipcode => {
+                  zipcode.map(zipcode => {
                     const {  FacilityName, latitude,longitude,Neighborhood,Zipcode } = zipcode;
                     return (
                       <div key={FacilityName}>
@@ -154,7 +151,7 @@ class App extends React.Component {
                   })
                 // If there is a delay in data, let's let the user know it's loading
                 ) : (
-                  <h3>Loading...</h3>
+                  <h3>Choose a neighborhood</h3>
                 )}
 
                 
