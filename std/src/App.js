@@ -19,13 +19,17 @@ class App extends React.Component {
         statesData: null ,
         condom:[],
         zipcode:[],
+        facility:[],
         isLoading: true,
         ismapLoading:true,
-        value:"East Harlem"
+        value:"East Harlem",
+        year:"2012"
       }
 
       this.handleChange = this.handleChange.bind(this);
       this.handleSubmit = this.handleSubmit.bind(this);
+      this.handleyearChange = this.handleyearChange.bind(this);
+
   }
 
   async loadData() {
@@ -46,6 +50,12 @@ class App extends React.Component {
 
   handleChange(event) {
     this.setState({value: event.target.value});
+
+  }
+
+  handleyearChange(event) {
+    this.setState({year: event.target.value});
+    console.log(this.state.year)
   }
 
   handleSubmit(event) {
@@ -60,8 +70,18 @@ class App extends React.Component {
         const condom = res.data;
         this.setState({ condom });
         this.setState({ zipcode });
-        this.setState({isLoading : false });
       })
+
+    axios.get('http://localhost:5000/diagnoses/' + this.state.year, {
+    })
+      .then(res => {
+        const facility = res.data.find(element => element.Neighborhood == this.state.value)
+        this.setState({ facility });
+        console.log(this.state.facility.HIVAIDS_Diagnoses)
+      })
+    
+      this.setState({isLoading : false });
+
   }
 
 
@@ -70,7 +90,7 @@ class App extends React.Component {
           return <div>Loading...</div>
       }
 
-      const {isLoading ,condom,zipcode,ismapLoading} = this.state;
+      const {isLoading ,condom,zipcode,ismapLoading,facility} = this.state;
 
       return (
         <Router>
@@ -85,15 +105,16 @@ class App extends React.Component {
                 
                 <div className="navigation">
                   <ul>
-                    <li><a href="#home">Facilities</a></li>
-                    <li><a href="#news">HIV cases</a></li>
+                    <li><a href="#facilities">Facilities</a></li>
+                    <li><a href="#hiv">HIV cases</a></li>
                   </ul>
                 </div>
 
-                {!ismapLoading ? <MapChart coords={condom}/> : null }
+                {!ismapLoading ? <MapChart coords={condom} facility={facility}/> : null }
 
                 <form onSubmit={this.handleSubmit}>
                   <label>
+                   
                     <select className ="custom-select " value={this.state.value} onChange={this.handleChange}>
                       <option value='Bedford Stuyvesant and Crown Heights'>Bedford Stuyvesant and Crown Heights</option>
                       <option value='Borough Park'>Borough Park</option>
@@ -135,21 +156,34 @@ class App extends React.Component {
                       <option value="Washington Heights and Inwood">Washington Heights and Inwood</option>
 
                       <option value='West Queens'>West Queens</option>
-                      <option selected value="Williamsburg and Bushwick">Coconut</option>
+                      <option  value="Williamsburg and Bushwick">Williamsburg and Bushwick</option>
+                    </select>
+                    
+                    <select className ="custom-select " value={this.state.year} onChange={this.handleyearChange}>
+                      <option value="2010">2010</option>
+                      <option value="2011">2011</option>
+                      <option value="2012">2012</option>
+                      <option value="2013">2013</option>
                     </select>
                   </label>
                   <input className ="custom-select-button" type="submit" value="Search" />
                 </form>
 
+               
+                {!isLoading ? <h4>Total number of HIV patients in year {this.state.year} :  {JSON.stringify(facility.HIVAIDS_Diagnoses)}</h4> : null }
+
+
                 {!isLoading ? (
                   zipcode.map(zipcode => {
                     const {  FacilityName, latitude,longitude,Neighborhood,Zipcode } = zipcode;
                     return (
-                      <div className ="lister" key={FacilityName}>
-                        <p>Facility Name: {FacilityName}</p>
-                        <p>Neighborhood: {Neighborhood}</p>
-                        <p>Zipcode: {Zipcode}</p>
-                        <hr />
+                      <div>
+                        <div className ="lister" key={FacilityName}>
+                          <p>Facility Name: {FacilityName}</p>
+                          <p>Neighborhood: {Neighborhood}</p>
+                          <p>Zipcode: {Zipcode}</p>
+                          <hr />
+                        </div>
                       </div>
                     );
                   })

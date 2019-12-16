@@ -58,7 +58,6 @@ class MapChart extends Component {
 
   getcoords(coordinates){
     var lat = this.pluck(coordinates, "Latitude");
-    console.log(coordinates);
     var lng = this.pluck(coordinates, "Longitude");
     var coords = []
     let temp = {};
@@ -72,13 +71,9 @@ class MapChart extends Component {
  
   componentDidUpdate(prevProps) {
     if (this.props.coords !== prevProps.coords) {
-      console.log(this.props.coords);
-      console.log(prevProps.coords);
-
       this.setState({
          heatmapPoints : this.getcoords(this.props.coords)
       })
-      console.log(this.state.heatmapPoints);
     }
   }
   

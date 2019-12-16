@@ -38,7 +38,6 @@ app.route('/HIV')
 app.route('/neigh/:id')
 
 .get(function(req, res, next) {
-  console.log(req.params.id);
 
   con.query(
     "SELECT c.FacilityName, c.Latitude, c.Longitude, z.Neighborhood, z.Zipcode FROM condom as c ,ZipstoNeigh as z WHERE z.Zipcode = c.Zipcode AND z.Neighborhood = ?",
@@ -48,9 +47,23 @@ app.route('/neigh/:id')
       res.json(results);
     }
   );
-  console.log(req.params.id);
 
 });  
+
+app.route('/diagnoses/:year')
+
+.get(function(req, res, next) {
+  con.query(
+    "SELECT z.Neighborhood, (sum(h.NumberHIVdiagnoses) +  sum(h.NumAIDSdiagnoses)) as HIVAIDS_Diagnoses FROM ZipstoNeigh as z, HIVAIDS as h WHERE z.Neighborhood = h.Neighborhood and h.Yr = ? and z.Neighborhood <> 'All' GROUP BY z.Neighborhood;",
+    [req.params.year],
+    function(error, results, fields) {
+      if (error) throw error;
+      res.json(results);
+    }
+  );
+
+});  
+
 
 
 app.get('/status', (req, res) => res.send('Working!'));
