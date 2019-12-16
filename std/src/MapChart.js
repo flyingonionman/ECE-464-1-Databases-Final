@@ -45,7 +45,6 @@ class MapChart extends Component {
       heatmapPoints: coords,
       test: ''
     }
-    console.log(this.state.heatmapPoints);
 
   }
   static defaultProps = {
@@ -55,6 +54,9 @@ class MapChart extends Component {
     },
     zoom: 11
   };
+
+  onMapClick({x, y, lat, lng, event}) {
+  }
 
   getcoords(coordinates){
     var lat = this.pluck(coordinates, "Latitude");
@@ -117,6 +119,8 @@ class MapChart extends Component {
           hoverDistance={23}
           heatmapLibrary={true}          
           heatmap={heatMapData}  
+          onClick={this.onMapClick.bind(this)}
+
         >
           <AnyReactComponent
             lat={40.7128}

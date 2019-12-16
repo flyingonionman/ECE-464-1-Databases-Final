@@ -179,3 +179,8 @@ svg {
   background-color: #111;
   opacity: .3;
 }
+
+.ranker p{
+  font-size:12px;
+  margin:0;
+}

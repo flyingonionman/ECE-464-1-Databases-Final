@@ -20,6 +20,8 @@ class App extends React.Component {
         condom:[],
         zipcode:[],
         facility:[],
+        ratio:[],
+        count:[],
         isLoading: true,
         ismapLoading:true,
         value:"East Harlem",
@@ -46,6 +48,18 @@ class App extends React.Component {
         this.setState({ismapLoading : false });
 
       })
+
+    axios.get(`http://localhost:5000/diagnoses/count`)
+      .then(res => {
+        const count = res.data;
+        this.setState({ count });
+      })  
+    
+    axios.get(`http://localhost:5000/diagnoses/ratio/`+ this.state.year)
+      .then(res => {
+        const ratio = res.data;
+        this.setState({ ratio });
+      })  
   }
 
   handleChange(event) {
@@ -55,7 +69,6 @@ class App extends React.Component {
 
   handleyearChange(event) {
     this.setState({year: event.target.value});
-    console.log(this.state.year)
   }
 
   handleSubmit(event) {
@@ -72,16 +85,13 @@ class App extends React.Component {
         this.setState({ zipcode });
       })
 
-    axios.get('http://localhost:5000/diagnoses/' + this.state.year, {
+    axios.get('http://localhost:5000/diagnoses/year/' + this.state.year, {
     })
       .then(res => {
         const facility = res.data.find(element => element.Neighborhood == this.state.value)
         this.setState({ facility });
-        console.log(this.state.facility.HIVAIDS_Diagnoses)
       })
-    
       this.setState({isLoading : false });
-
   }
 
 
@@ -90,7 +100,7 @@ class App extends React.Component {
           return <div>Loading...</div>
       }
 
-      const {isLoading ,condom,zipcode,ismapLoading,facility} = this.state;
+      const {isLoading ,condom,zipcode,ismapLoading,facility,ratio} = this.state;
 
       return (
         <Router>
@@ -105,12 +115,53 @@ class App extends React.Component {
                 
                 <div className="navigation">
                   <ul>
-                    <li><a href="#facilities">Facilities</a></li>
-                    <li><a href="#hiv">HIV cases</a></li>
+                    <li><Link to="/">Home</Link></li>
+                    <li><Link to="/stats">Stats</Link></li>
                   </ul>
                 </div>
 
-                {!ismapLoading ? <MapChart coords={condom} facility={facility}/> : null }
+                <Switch>
+                  <Route path="/stats">
+                      <h3>Number of facilities in a neighborhood </h3>
+
+                      {!ismapLoading ? (
+                      this.state.count.map(count => {
+                        const {  Neighborhood, ranker  } = count;
+                        return (
+                          <div>
+                            <div className ="ranker" key={Neighborhood}>
+                              <p>{Neighborhood}: {ranker}</p>
+                            </div>
+                          </div>
+                        );
+                      })
+                    // If there is a delay in data, let's let the user know it's loading
+                    ) : (
+                      <h3></h3>
+                    )}
+
+                      <h3>Ratio of HIV cases to facilities in year {this.state.year}</h3>
+
+                      {!ismapLoading ? (
+                      ratio.map(count => {
+                        const {  Neighborhood, ratiodiagnosestocenters  } = count;
+                        return (
+                          <div>
+                            <div className ="ranker" key={Neighborhood}>
+                              <p>{Neighborhood}: {ratiodiagnosestocenters}</p>
+                            </div>
+                          </div>
+                        );
+                      })
+                      // If there is a delay in data, let's let the user know it's loading
+                      ) : (
+                      <h3></h3>
+                      )}
+                  </Route>
+                  <Route path="/">
+                      {!ismapLoading ? <MapChart coords={condom} facility={facility}/> : null }
+                  </Route>
+                </Switch>
 
                 <form onSubmit={this.handleSubmit}>
                   <label>
@@ -170,7 +221,12 @@ class App extends React.Component {
                 </form>
 
                
-                {!isLoading ? <h4>Total number of HIV patients in year {this.state.year} :  {JSON.stringify(facility.HIVAIDS_Diagnoses)}</h4> : null }
+                {!isLoading ? 
+                    <>
+                    <h3>Neighborhood Data</h3>
+                    <h4>Total number of HIV patients in year {this.state.year} :  {JSON.stringify(facility.HIVAIDS_Diagnoses)}</h4>
+                    </>
+                     : null }
 
 
                 {!isLoading ? (
