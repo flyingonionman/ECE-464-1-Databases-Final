@@ -9,6 +9,7 @@
     "axios": "^0.19.0",
     "concurrently": "^5.0.1",
     "cors": "^2.8.5",
+    "cross-env": "^6.0.3",
     "d3-fetch": "^1.1.2",
     "d3-geo": "^1.11.9",
     "d3-geomap": "^3.3.0",
@@ -26,7 +27,7 @@
     "topojson-server": "^3.0.1"
   },
   "scripts": {
-    "start": "concurrently \"react-scripts start\" \"node ./src/server/server.js  \"",
+    "start": "concurrently \"cross-env HTTPS=true react-scripts start\" \"node ./src/server/server.js  \"",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
