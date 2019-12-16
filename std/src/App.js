@@ -81,16 +81,20 @@ class App extends React.Component {
             <div className='content'>
                 <p className='authors'>Minyoung Na and Samuel Makarovskiy</p>
                 <div className='contentblock'>
-                <h3>
-                  Search for things !
-                </h3>
                 
+                
+                <div className="navigation">
+                  <ul>
+                    <li><a href="#home">Facilities</a></li>
+                    <li><a href="#news">HIV cases</a></li>
+                  </ul>
+                </div>
+
                 {!ismapLoading ? <MapChart coords={condom}/> : null }
 
                 <form onSubmit={this.handleSubmit}>
                   <label>
-                    Place:
-                    <select value={this.state.value} onChange={this.handleChange}>
+                    <select className ="custom-select " value={this.state.value} onChange={this.handleChange}>
                       <option value='Bedford Stuyvesant and Crown Heights'>Bedford Stuyvesant and Crown Heights</option>
                       <option value='Borough Park'>Borough Park</option>
                       <option value='Canarsie and Flatlands'>Canarsie and Flatlands</option>
@@ -134,7 +138,7 @@ class App extends React.Component {
                       <option selected value="Williamsburg and Bushwick">Coconut</option>
                     </select>
                   </label>
-                  <input type="submit" value="Search" />
+                  <input className ="custom-select-button" type="submit" value="Search" />
                 </form>
 
                 {!isLoading ? (
