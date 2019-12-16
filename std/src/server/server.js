@@ -41,7 +41,7 @@ app.route('/neigh/:id')
   console.log(req.params.id);
 
   con.query(
-    "SELECT c.FacilityName, c.latitude, c.longitude, z.Neighborhood, z.Zipcode FROM condom as c ,ZipstoNeigh as z WHERE z.Zipcode = c.Zipcode AND z.Neighborhood = ?",
+    "SELECT c.FacilityName, c.Latitude, c.Longitude, z.Neighborhood, z.Zipcode FROM condom as c ,ZipstoNeigh as z WHERE z.Zipcode = c.Zipcode AND z.Neighborhood = ?",
     [req.params.id],
     function(error, results, fields) {
       if (error) throw error;

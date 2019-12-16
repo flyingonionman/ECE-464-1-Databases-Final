@@ -20,6 +20,7 @@ class App extends React.Component {
         condom:[],
         zipcode:[],
         isLoading: true,
+        ismapLoading:true,
         value:"East Harlem"
       }
 
@@ -38,6 +39,8 @@ class App extends React.Component {
       .then(res => {
         const condom = res.data;
         this.setState({ condom });
+        this.setState({ismapLoading : false });
+
       })
   }
 
@@ -47,11 +50,15 @@ class App extends React.Component {
 
   handleSubmit(event) {
      event.preventDefault();
+     const zipcode = [];
+     this.setState({ zipcode });
+
      axios.get('http://localhost:5000/neigh/' + this.state.value, {
     })
       .then(res => {
         const zipcode = res.data;
-        console.log(res);
+        const condom = res.data;
+        this.setState({ condom });
         this.setState({ zipcode });
         this.setState({isLoading : false });
       })
@@ -63,7 +70,7 @@ class App extends React.Component {
           return <div>Loading...</div>
       }
 
-      const {isLoading ,condom,zipcode} = this.state;
+      const {isLoading ,condom,zipcode,ismapLoading} = this.state;
 
       return (
         <Router>
@@ -77,15 +84,14 @@ class App extends React.Component {
                 <h3>
                   Search for things !
                 </h3>
-                <MapChart coords={zipcode}/>
                 
+                {!ismapLoading ? <MapChart coords={condom}/> : null }
+
                 <form onSubmit={this.handleSubmit}>
                   <label>
                     Place:
                     <select value={this.state.value} onChange={this.handleChange}>
-                      <option value='Bayside and Little Neck'>Bayside and Little Neck</option>
                       <option value='Bedford Stuyvesant and Crown Heights'>Bedford Stuyvesant and Crown Heights</option>
-                      <option value='Bensonhurst and Bay Ridge'>Bensonhurst and Bay Ridge</option>
                       <option value='Borough Park'>Borough Park</option>
                       <option value='Canarsie and Flatlands'>Canarsie and Flatlands</option>
                       <option value='Central Harlem and Morningside Heights'>Central Harlem and Morningside Heights</option>
@@ -114,7 +120,6 @@ class App extends React.Component {
                       <option value='Pelham and Throgs Neck'>Pelham and Throgs Neck</option>
                       <option value='Port Richmond'>Port Richmond</option>
                       <option value='Ridgewood and Forest Hills'>Ridgewood and Forest Hills</option>
-                      <option value='Rockaway'>Rockaway</option>
                       <option value='South Beach and Tottenville'>South Beach and Tottenville</option>
                       <option value='Southeast Queens'>Southeast Queens</option>                      
                       <option value="Stapleton and St. George">Stapleton and St. George</option>
@@ -127,23 +132,18 @@ class App extends React.Component {
 
                       <option value='West Queens'>West Queens</option>
                       <option selected value="Williamsburg and Bushwick">Coconut</option>
-                      <option value='Willowbrook'>Willowbrook</option>
-
-                      <option value="mango">Mango</option>
                     </select>
                   </label>
-                  <input type="submit" value="Submit" />
+                  <input type="submit" value="Search" />
                 </form>
 
                 {!isLoading ? (
                   zipcode.map(zipcode => {
                     const {  FacilityName, latitude,longitude,Neighborhood,Zipcode } = zipcode;
                     return (
-                      <div key={FacilityName}>
+                      <div className ="lister" key={FacilityName}>
                         <p>Facility Name: {FacilityName}</p>
-                        <p>Service Category: {latitude}</p>
-                        <p>Service Type: {longitude}</p>
-                        <p>Detailed Partner Type: {Neighborhood}</p>
+                        <p>Neighborhood: {Neighborhood}</p>
                         <p>Zipcode: {Zipcode}</p>
                         <hr />
                       </div>
