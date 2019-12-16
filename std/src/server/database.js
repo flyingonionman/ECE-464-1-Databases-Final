@@ -3,10 +3,9 @@ const express = require('express');
 const app = express();
 
 var con = mysql.createConnection({
-  host: "35.222.36.73",
+  socketPath: 'vertical-web-261900:us-central1:database-469-final-project',
   user: "root",
   password: "dL31998Ei6udEbNE",
-  port:3306,
   database: "diagnosis"
 });
 
