@@ -100,6 +100,12 @@ class App extends React.Component {
         this.setState({ facility });
       })
       this.setState({isLoading : false });
+
+    axios.get(`http://localhost:5000/diagnoses/ratio/`+ this.state.year)
+      .then(res => {
+        const ratio = res.data;
+        this.setState({ ratio });
+      })  
   }
 
   seedetail(){
@@ -128,6 +134,8 @@ class App extends React.Component {
                   <ul>
                     <li><Link to="/">Home</Link></li>
                     <li><Link to="/stats">Stats</Link></li>
+                    <li><Link to="/HIV">HIV</Link></li>
+
                   </ul>
                 </div>
 
@@ -168,6 +176,9 @@ class App extends React.Component {
                       )}
                   </Route>
                   <Route path="/">
+                      {!ismapLoading ? <MapChart coords={condom} facility={facility}/> : null }
+                  </Route>
+                  <Route path="HIV">
                       {!ismapLoading ? <MapChart coords={condom} facility={facility}/> : null }
                   </Route>
                 </Switch>
@@ -233,7 +244,7 @@ class App extends React.Component {
                 {!isLoading ? 
                     <>
                     <h3>Neighborhood Data</h3>
-                    <h4>Total number of HIV patients in year {this.state.year} :  {JSON.stringify(facility.HIVAIDS_Diagnoses)}</h4>
+                    <h4>Total number of HIV patients in {this.state.value} year {this.state.year} :  {JSON.stringify(facility.HIVAIDS_Diagnoses)}</h4>
                     <button className ="custom-select-button" onClick={() => { this.seedetail() }}>See detail</button>
 
                     </>
